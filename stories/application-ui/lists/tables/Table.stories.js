@@ -1,4 +1,4 @@
-import Table from '/components/ui/lists/tables/table.vue';
+import Table from '/components/application-ui/lists/tables/table.vue';
 
 // More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
@@ -30,4 +30,12 @@ const Template = (args) => ({
 export const Simple = Template.bind({});
 // More on args: https://storybook.js.org/docs/vue/writing-stories/args
 Simple.args = {
+	title: 'title',
+	description: 'description',
+	uppercaseHeadings: true,
+	stripedRows: true,
+	data: [{}],
+	edit: true,
+	add: true,
+	addText: 'Add',
 };
