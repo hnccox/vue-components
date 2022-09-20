@@ -1,9 +1,9 @@
-import Table from '/components/application-ui/lists/tables/table.vue';
+import Mapbox from '/components/application-ui/data-display/maps/mapbox.vue';
 
 // More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
-	title: 'Lists/Table',
-	component: Table,
+	title: 'Data-Display/Maps/Mapbox',
+	component: Mapbox,
 	// More on argTypes: https://storybook.js.org/docs/vue/api/argtypes
 	// argTypes: {
 	//   backgroundColor: { control: 'color' },
@@ -18,13 +18,13 @@ export default {
 // More on component templates: https://storybook.js.org/docs/vue/writing-stories/introduction#using-args
 const Template = (args) => ({
 	// Components used in your story `template` are defined in the `components` object
-	components: { Table },
+	components: { Mapbox },
 	// The story's `args` need to be mapped into the template through the `setup()` method
 	setup() {
 		return { args };
 	},
 	// And then the `args` are bound to your component with `v-bind="args"`
-	template: '<Preview><Table v-bind="args" /></Preview>',
+	template: '<Mapbox v-bind="args" />',
 });
 
 export const Simple = Template.bind({});

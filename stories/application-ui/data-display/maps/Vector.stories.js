@@ -1,9 +1,9 @@
-import Table from '/components/application-ui/lists/tables/table.vue';
+import Vectormap from '/components/application-ui/data-display/maps/vector.vue';
 
 // More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
-	title: 'Lists/Table',
-	component: Table,
+	title: 'Data-Display/Maps/Vectormap',
+	component: Vectormap,
 	// More on argTypes: https://storybook.js.org/docs/vue/api/argtypes
 	// argTypes: {
 	//   backgroundColor: { control: 'color' },
@@ -18,24 +18,19 @@ export default {
 // More on component templates: https://storybook.js.org/docs/vue/writing-stories/introduction#using-args
 const Template = (args) => ({
 	// Components used in your story `template` are defined in the `components` object
-	components: { Table },
+	components: { Vectormap },
 	// The story's `args` need to be mapped into the template through the `setup()` method
 	setup() {
 		return { args };
 	},
 	// And then the `args` are bound to your component with `v-bind="args"`
-	template: '<Preview><Table v-bind="args" /></Preview>',
+	template: '<Vectormap v-bind="args" />',
 });
 
 export const Simple = Template.bind({});
 // More on args: https://storybook.js.org/docs/vue/writing-stories/args
 Simple.args = {
-	title: 'title',
-	description: 'description',
-	uppercaseHeadings: true,
-	stripedRows: true,
-	data: [{}],
-	edit: true,
-	add: true,
-	addText: 'Add',
+	map: 'world',
+	projection: 'merc',
+	data: []
 };
