@@ -26,12 +26,12 @@ const Template = (args) => ({
 		return { args, ...Card.args };
 	},
 	// And then the `args` are bound to your component with `v-bind="args"`
-	template: '<Card><template v-slot:body fullscreen=true><div class="grid grid-cols-1 py-5" style="height:600px;"><Mapbox v-bind="args" /></div></template></Card>',
+	template: '<Card><template v-slot:body fullscreen=true><div class="grid grid-cols-1" style="height:600px;"><Mapbox v-bind="args" /></div></template></Card>',
 });
 
 // const Template = (args) => <Mapbox v-bind="args"></Mapbox>
 
-export const MapBox = Template.bind({});
+export const MapboxMap = Template.bind({});
 // More on args: https://storybook.js.org/docs/vue/writing-stories/args
-MapBox.args = {
+MapboxMap.args = {
 };

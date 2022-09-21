@@ -6,13 +6,26 @@
 import { onMounted } from 'vue';
 import mapboxgl from 'mapbox-gl';
 
+var colorScheme
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+	colorScheme = 'dark';
+} else {
+	colorScheme = 'light';
+}
+
 mapboxgl.accessToken = 'pk.eyJ1IjoiaHVnby1mb29kdGlja2V0IiwiYSI6ImNremk2cWU1eDIzZnAyc282c2lxcmRsNXYifQ._LbC1YoHTlQAwLT5wQARWg';
 
 onMounted(() => {
+
+	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+    colorScheme = event.matches ? "dark" : "light";
+		map.setStyle('mapbox://styles/mapbox/' + colorScheme + '-v10');
+	})
+
 	const map = new mapboxgl.Map({
 		container: 'map', // container ID
 		// Choose from Mapbox's core styles, or make your own style with Mapbox Studio
-		style: 'mapbox://styles/mapbox/dark-v10', // style URL
+		style: `mapbox://styles/mapbox/${colorScheme}-v10`, // style URL
 		projection: {
 			name: 'globe'
 		},

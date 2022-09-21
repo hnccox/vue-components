@@ -140,18 +140,18 @@ onMounted(() => {
 				cursor: 'pointer'
 			}
 		},
-		onRegionSelected: function (index, isSelected, selectedRegions) {
+		onRegionSelected: function (index: any, isSelected: any, selectedRegions: any) {
 			console.log(index, isSelected, selectedRegions);
 		},
-		onMarkerSelected: function (code, isSelected, selectedMarkers) {
+		onMarkerSelected: function (code: any, isSelected: any, selectedMarkers: any) {
 			console.log(code, isSelected, selectedMarkers)
 		},
-		onRegionTooltipShow: function (tooltip, code) {
+		onRegionTooltipShow: function (tooltip: any, code: any) {
 			if (code === 'RU') {
 				tooltip.selector.innerHTML = tooltip.text() + ' <b>(Hello Russia)</b>'
 			}
 		},
-		onMarkerTooltipShow: function (tooltip, index) {
+		onMarkerTooltipShow: function (tooltip: any, index: any) {
 			tooltip.selector.innerHTML = '<h5 class="mb-0">' + tooltip.text() + '</h5>' + '<p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p><small class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit.</small>'
 		},
 	})
