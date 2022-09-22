@@ -161,7 +161,7 @@ onMounted(() => {
 </script>
 
 <style>
-@import 'jsvectormap';
+/* @import 'jsvectormap'; */
 
 .jvm-zoom-btn {
 	position: absolute;
