@@ -25,7 +25,7 @@ const Template = (args) => ({
 		return { args, ...Card.args };
 	},
 	// And then the `args` are bound to your component with `v-bind="args"`
-	template: '<Card><template v-slot:body fullscreen=true><div class="grid grid-cols-1 py-5" style="height:600px;"><Vectormap v-bind="args" /></div></template></Card>',
+	template: '<Card class="p-2"><template v-slot:body fullscreen=true><div class="grid grid-cols-1" style="height:600px;"><Vectormap v-bind="args" /></div></template></Card>',
 });
 
 export const VectorMap = Template.bind({});
