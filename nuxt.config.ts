@@ -6,7 +6,10 @@ export default defineNuxtConfig({
 		strict: true
 	},
 	modules: ['@nuxtjs/tailwindcss'],
-	// css: ["@/assets/css/styles.css"],
+	css: ["@/assets/css/styles.css"],
+	tailwindcss: {
+		// Options
+	  },
 	storybook: {
 		// Options
 	}
