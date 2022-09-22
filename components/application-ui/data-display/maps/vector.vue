@@ -1,6 +1,6 @@
 <template>
-	<div class="jsvectormap-container" id="vectormap"
-		style="width: 100%; height: 100%; position: relative; background-color: transparent;"></div>
+	<div id="map" class="w-full h-full self-center jsvectormap-container" 
+		style="position: relative; background-color: transparent;"></div>
 </template>
 
 <script setup lang="ts">
@@ -27,8 +27,6 @@ const props = defineProps({
 
 onMounted(() => {
 
-	var selector = '#vectormap';
-	var map = `${props.map}_${props.projection}`;
 	// var markers = [
 	// 	{
 	// 		name: 'Palestine',
@@ -48,9 +46,9 @@ onMounted(() => {
 	// 	},
 	// ];
 
-	const vectorMap = jsVectorMap({
-		selector: selector,
-		map: map,
+	const map = jsVectorMap({
+		selector: '#map',
+		map: `${props.map}_${props.projection}`,
 		backgroundColor: 'tranparent',
 		draggable: true,
 		zoomButtons: true,
@@ -163,7 +161,7 @@ onMounted(() => {
 </script>
 
 <style>
-/* @import 'jsvectormap'; */
+@import 'jsvectormap';
 
 .jvm-zoom-btn {
 	position: absolute;
