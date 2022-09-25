@@ -1,4 +1,6 @@
 {
 	"extends": "./.nuxt/tsconfig.json",
-	"skipLibCheck": true
+	"compilerOptions": {
+		"skipLibCheck": true
+	},
 }

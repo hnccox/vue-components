@@ -2,7 +2,7 @@ import GChart from '/components/application-ui/data-display/charts/GChart/gchart
 
 // More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
-	title: 'Data-Display/Charts',
+	title: 'Data-Display/Charts/GChart',
 	component: GChart,
 	// decorators: [(Story) => ({ template: '<div style="margin: 3em;height:500px"><CardStories><story/><CardStories></div>' })],
 	// More on argTypes: https://storybook.js.org/docs/vue/api/argtypes

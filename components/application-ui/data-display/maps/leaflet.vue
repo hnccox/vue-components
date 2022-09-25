@@ -21,17 +21,17 @@ onMounted(() => {
 
 	Stadia_AlidadeSmoothDark = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
 		maxZoom: 20,
-		attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'			
+		attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
 	})
 
 	Stadia_AlidadeSmooth = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
 		maxZoom: 20,
 		attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
 	})
-	
+
 	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-    colorScheme = event.matches ? "dark" : "light";
-		if(colorScheme == "dark"){
+		colorScheme = event.matches ? "dark" : "light";
+		if (colorScheme == "dark") {
 			map.value.removeLayer(Stadia_AlidadeSmooth)
 			map.value.addLayer(Stadia_AlidadeSmoothDark)
 		} else {
@@ -42,7 +42,7 @@ onMounted(() => {
 
 	map.value = L.map('map').setView([51.505, -0.09], 13);
 
-	if(colorScheme == "dark"){
+	if (colorScheme == "dark") {
 		map.value.addLayer(Stadia_AlidadeSmoothDark)
 	} else {
 		map.value.addLayer(Stadia_AlidadeSmooth)
@@ -52,6 +52,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
-	@import url('https://unpkg.com/leaflet@1.8.0/dist/leaflet.css');
-	#map { height: 600px; }
+@import url('https://unpkg.com/leaflet@1.8.0/dist/leaflet.css');
+
+#map {
+	height: 600px;
+}
 </style>

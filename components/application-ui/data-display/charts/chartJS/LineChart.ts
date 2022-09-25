@@ -1,13 +1,13 @@
 // BarChart.ts
 import { defineComponent, h, PropType } from 'vue'
-import { Bar } from 'vue-chartjs'
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PluginOptionsByType } from 'chart.js'
+import { Area } from 'vue-chartjs'
+import { Chart as ChartJS, Title, Tooltip, Legend, AreaElement, CategoryScale, LinearScale, PluginOptionsByType } from 'chart.js'
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+ChartJS.register(Title, Tooltip, Legend, AreaElement, CategoryScale, LinearScale)
 
 export default defineComponent({
-	name: 'BarChart',
-	components: { Bar },
+	name: 'AreaChart',
+	components: { Area },
 	props: {
 		chartId: {
 			type: String,
@@ -43,7 +43,7 @@ export default defineComponent({
 		const chartOptions = { responsive: true }
 
 		return () =>
-			h(Bar, {
+			h(Area, {
 				chartData,
 				chartOptions,
 				chartId: props.chartId,
