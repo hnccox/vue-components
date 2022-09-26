@@ -2,9 +2,9 @@
 	<canvas ref="chartRef"></canvas>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
 import { ref, Ref, onBeforeMount, onMounted, onBeforeUnmount } from 'vue'
-import { Chart, registerables } from 'chart.js';
+import { Chart, ChartItem, registerables } from 'chart.js';
 Chart.register(...registerables);
 
 interface Dataset {
@@ -47,7 +47,7 @@ const options = props.options
 
 onMounted(() => {
 
-	const ctx = chartRef.value.getContext('2d');
+	const ctx = chartRef.value.getContext('2d') as ChartItem;
 	const chart = new Chart(ctx, {
 		type: type,
 		data: data,
