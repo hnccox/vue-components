@@ -201,14 +201,33 @@ let chart, smallChart;
 */
 async function requestData() {
 
-	const response = await fetch('//172.22.89.254:3001/api/data/randomArray')
+	const response = await fetch('//0.0.0.0:3001/api/data/randomArray')
 	if (response.ok) {
-		const responseJSON = await response.json()
-		chart.series[1].setData(responseJSON.data)
+		const responseJSON = await response.json();
 
-		let expiresAt = (new Date(responseJSON.expiresAt)).getTime();
-		let currentTime = Date.now();
-		setTimeout(requestData, parseInt(expiresAt - currentTime))
+		// const xAxisExtremes = chart.xAxis[0].getExtremes();
+		// const yAxisExtremes = chart.yAxis[0].getExtremes();
+		const center = chart.mapView.center;
+		const zoom = chart.mapView.zoom;
+		const rotation = chart.mapView.projection.options.rotation;
+		// console.log(center, zoom, rotation)
+
+		chart.series[1].setData(responseJSON.data);
+		// chart.mapView.setView(center, zoom, true, false);
+		// chart.mapView.update({
+		// 	projection: {
+		// 		rotation: rotation
+		// 	},
+		// 	zoom: zoom,
+		// 	center: center
+		// }, true, false);
+		// chart.mapView.setView(center, zoom, false, false);
+		// chart.xAxis[0].setExtremes(xAxisExtremes);
+		// chart.yAxis[0].setExtremes(yAxisExtremes);
+		// let expiresAt = (new Date(responseJSON.expiresAt)).getTime();
+		// let currentTime = Date.now();
+		// console.log(responseJSON.pollingTimeout);
+		(responseJSON.pollingTimeout) ? setTimeout(requestData, responseJSON.pollingTimeout) : setTimeout(requestData, 6000);
 	} else {
 		setTimeout(requestData, 6000)
 	}
@@ -282,6 +301,7 @@ onMounted(async () => {
 	const drawMap = projectionKey => {
 
 		// Apply projection
+		// const zoom = undefined;
 		const projection = Highcharts.merge({
 			name: undefined
 		}, {
@@ -321,9 +341,33 @@ onMounted(async () => {
 			chart = Highcharts.mapChart('container', {
 				chart: {
 					height: '65%',
+					zoomType: 'scale',
 					events: {
+						// load: requestData
 						load: requestData
-					}
+					},
+
+					// xAxis: {
+					// 	events: {
+					// 		afterSetExtremes: function() {
+					// 			const {min, max} = this.getExtremes();
+					// 			x[2] = min; x[3] = max;
+					// 			zoomX = Math.abs(x[3] - x[2]) / Math.abs(x[1] - x[0]);
+					// 			console.log(zoomX);
+					// 		}
+					// 	}
+					// },
+
+					// yAxis: {
+					// 	events: {
+					// 		afterSetExtremes: function() {
+					// 			const {min, max} = this.getExtremes();
+					// 			y[0] = min; y[1] = max;
+					// 			zoomY = Math.abs(x[3] - x[2]) / Math.abs(x[1] - x[0]);
+					// 			console.log(zoomY);
+					// 		}
+					// 	}
+					// },
 				},
 
 				title: {
@@ -343,7 +387,7 @@ onMounted(async () => {
 				},
 
 				mapView: {
-					projection
+					projection,
 					/*
 					projection: {
 							name: 'WebMercator'
@@ -405,35 +449,35 @@ onMounted(async () => {
 					name: 'Antarctica',
 					clip: false,
 					opacity: 0.75
-				}, {
-					type: 'mapline',
-					data: [{
-						geometry: {
-							type: 'LineString',
-							coordinates: [
-								[4.90, 53.38], // Amsterdam
-								[-118.24, 34.05] // Los Angeles
-							]
-						},
-						color: '#3030d0'
-					}],
-					lineWidth: 2
-				}, {
-					type: 'mappoint',
-					data: [{
-						geometry: {
-							type: 'Point',
-							coordinates: [4.90, 53.38]
-						},
-						name: 'Amsterdam'
-					}, {
-						geometry: {
-							type: 'Point',
-							coordinates: [-118.24, 34.05]
-						},
-						name: 'LA'
-					}],
-					color: '#3030d0'
+				// }, {
+				// 	type: 'mapline',
+				// 	data: [{
+				// 		geometry: {
+				// 			type: 'LineString',
+				// 			coordinates: [
+				// 				[4.90, 53.38], // Amsterdam
+				// 				[-118.24, 34.05] // Los Angeles
+				// 			]
+				// 		},
+				// 		color: '#3030d0'
+				// 	}],
+				// 	lineWidth: 2
+				// }, {
+				// 	type: 'mappoint',
+				// 	data: [{
+				// 		geometry: {
+				// 			type: 'Point',
+				// 			coordinates: [4.90, 53.38]
+				// 		},
+				// 		name: 'Amsterdam'
+				// 	}, {
+				// 		geometry: {
+				// 			type: 'Point',
+				// 			coordinates: [-118.24, 34.05]
+				// 		},
+				// 		name: 'LA'
+				// 	}],
+				// 	color: '#3030d0'
 				}],
 			});
 			console.timeEnd('@mapChart');
@@ -441,7 +485,8 @@ onMounted(async () => {
 		} else {
 			chart.update({
 				mapView: {
-					projection
+					projection,
+					// zoom
 				}
 			});
 		}
@@ -468,7 +513,8 @@ onMounted(async () => {
 					projection: {
 						name: 'Orthographic',
 						rotation: [0, -10, 0]
-					}
+					},
+					// zoom
 				},
 
 				plotOptions: {
@@ -540,6 +586,8 @@ onMounted(async () => {
 
 		document.querySelectorAll('.rotation').forEach(input => {
 			input.addEventListener('input', () => {
+				const center = chart.mapView.center;
+				const zoom = chart.mapView.zoom;
 				const rotation = [
 					document.getElementById('rotation-lambda').value,
 					document.getElementById('rotation-phi').value,
@@ -563,6 +611,8 @@ onMounted(async () => {
 
 		document.querySelectorAll('.preset-rotations a').forEach(input => {
 			input.addEventListener('click', () => {
+				const center = chart.mapView.center;
+				const zoom = chart.mapView.zoom;
 				const rotation = input.getAttribute('data-rotation')
 					.split(',')
 					.map(Number);
@@ -579,7 +629,9 @@ onMounted(async () => {
 						chart.mapView.update({
 							projection: {
 								rotation: rotationStep
-							}
+							},
+							// zoom,
+							// center
 						}, true, false);
 
 						rotationStep.forEach((value, i) => {
@@ -596,6 +648,8 @@ onMounted(async () => {
 
 		document.querySelectorAll('.parallels').forEach(input => {
 			input.addEventListener('input', () => {
+				const center = chart.mapView.center;
+				const zoom = chart.mapView.zoom;
 				const parallels = [
 					Number(document.getElementById('parallels-0').value),
 					Number(document.getElementById('parallels-1').value)
@@ -603,7 +657,9 @@ onMounted(async () => {
 				chart.mapView.update({
 					projection: {
 						parallels
-					}
+					},
+					// zoom,
+					// center
 				}, true, false);
 				document.getElementById('parallels-0-output')
 					.innerText = parallels[0];

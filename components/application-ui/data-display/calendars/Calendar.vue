@@ -19,10 +19,10 @@ currentDate.setFirstDayOfWeek(store.firstDayOfWeek);
 const currentDateString = currentDate.toISOString().split('T')[0]
 const selectedDate = ref(currentDate)
 const visibleDate = ref(currentDate)
-let visibleDateTimeRange
+let visibleDateTimeRange: { from: Date, until: Date}
 switch (view.value) {
 	case 'day':
-		visibleDateTimeRange = { from: new Date(visibleDate.value.getFullYear(), visibleDate.value.getMonth(), visibleDate.value.getDate(), 0, 0, 0, 0).valueOf(), until: new Date(visibleDate.value.getFullYear(), visibleDate.value.getMonth(), visibleDate.value.getDate() + 1, 0, 0, 0, 0).valueOf() }
+		visibleDateTimeRange = { from: new Date(visibleDate.value.getFullYear(), visibleDate.value.getMonth(), visibleDate.value.getDate(), 0, 0, 0, 0), until: new Date(visibleDate.value.getFullYear(), visibleDate.value.getMonth(), visibleDate.value.getDate() + 1, 0, 0, 0, 0) }
 		break;
 	case 'week':
 		let date = new Date(visibleDate.value.valueOf())
@@ -38,16 +38,16 @@ switch (view.value) {
 			dayOfWeek--
 			date.setDate(date.getDate() - 1)
 		}
-		visibleDateTimeRange = { from: new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0).valueOf(), until: new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7, 0, 0, 0, 0).valueOf() }
+		visibleDateTimeRange = { from: new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0), until: new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7, 0, 0, 0, 0) }
 		break;
 	case 'month':
-		visibleDateTimeRange = { from: new Date(visibleDate.value.getFullYear(), visibleDate.value.getMonth(), 1, 0, 0, 0, 0).valueOf(), until: new Date(visibleDate.value.getFullYear(), visibleDate.value.getMonth() + 1, 1, 0, 0, 0, 0).valueOf() }
+		visibleDateTimeRange = { from: new Date(visibleDate.value.getFullYear(), visibleDate.value.getMonth(), 1, 0, 0, 0, 0), until: new Date(visibleDate.value.getFullYear(), visibleDate.value.getMonth() + 1, 1, 0, 0, 0, 0) }
 		break;
 	case 'year':
-		visibleDateTimeRange = { from: new Date(visibleDate.value.getFullYear(), 0, 1, 0, 0, 0, 0).valueOf(), until: new Date(visibleDate.value.getFullYear() + 1, 0, 1, 0, 0, 0, 0).valueOf() }
+		visibleDateTimeRange = { from: new Date(visibleDate.value.getFullYear(), 0, 1, 0, 0, 0, 0), until: new Date(visibleDate.value.getFullYear() + 1, 0, 1, 0, 0, 0, 0) }
 		break;
 	case '7days':
-		visibleDateTimeRange = { from: new Date(visibleDate.value.getFullYear(), visibleDate.value.getMonth(), visibleDate.value.getDate(), 0, 0, 0, 0).valueOf(), until: new Date(visibleDate.value.getFullYear(), visibleDate.value.getMonth(), visibleDate.value.getDate() + 7, 0, 0, 0, 0).valueOf() }
+		visibleDateTimeRange = { from: new Date(visibleDate.value.getFullYear(), visibleDate.value.getMonth(), visibleDate.value.getDate(), 0, 0, 0, 0), until: new Date(visibleDate.value.getFullYear(), visibleDate.value.getMonth(), visibleDate.value.getDate() + 7, 0, 0, 0, 0) }
 		break;
 }
 let locale = navigator.languages
@@ -303,7 +303,7 @@ const dateLabel = computed(() => {
 
 })
 
-function convertRemToPixels(rem) {
+function convertRemToPixels(rem: number) {
 	return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
 }
 
