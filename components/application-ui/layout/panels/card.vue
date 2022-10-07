@@ -7,9 +7,13 @@
 			<!-- We use less vertical padding on card headers on desktop than on body sections -->
 			<slot name="header"></slot>
 		</div>
-		<div class="grow" :class="[(fullscreen) ? 'px-4 py-5 sm:p-6' : '']">
+		<div v-if="$slots.body" class="grow" :class="[(fullscreen) ? 'px-4 py-5 sm:p-6' : 'px-4 py-5 sm:p-6']">
 			<!-- Content goes here -->
 			<slot name="body"></slot>
+		</div>
+		<div v-else class="grow px-4 py-5 sm-p6">
+			<!-- Content goes here -->
+					<slot></slot>
 		</div>
 		<div v-if="$slots.footer && !fullscreen" class="px-4 py-4 sm:px-6 shrink">
 			<!-- Content goes here -->

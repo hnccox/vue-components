@@ -31,7 +31,7 @@ export const InputComponent = Template.bind({});
 // More on args: https://storybook.js.org/docs/vue/writing-stories/args
 InputComponent.args = {
 	id: 'email',
-	type: 'time',
+	type: 'email',
 	icon: true,
 	iconPosition: 'left',
 	name: 'email',

@@ -1,3 +1,78 @@
+<script setup lang="ts">
+import { ref, Ref, computed, onMounted, onUnmounted, onUpdated, onActivated } from 'vue'
+import { Switch, SwitchDescription, SwitchGroup, SwitchLabel } from '@headlessui/vue'
+import { isString, isObject, isBoolean, has, get, translate, px } from './utils'
+
+const props = defineProps({
+	value: {
+		type: Boolean,
+		default: false,
+	},
+	name: {
+		type: String,
+	},
+	disabled: {
+		type: Boolean,
+		default: false,
+	},
+	icons: {
+		required: false,
+		type: Object
+	},
+	label: {
+		required: false,
+		type: Object,
+		default: {
+			title: '',
+			description: '',
+			position: 'left'
+		}
+	},
+	optionLabels: {
+		required: false,
+		type: Object
+	}
+})
+
+const enabled = ref(props.value)
+const disabled = ref(props.disabled)
+
+const toggleRef = ref({}) as Ref<any>
+const sliderRef = ref({}) as Ref<any>
+const checkedLabelRef = ref({}) as Ref<any>
+const uncheckedLabelRef = ref({}) as Ref<any>
+
+const sliderWidth = () => {
+	return sliderRef.value.offsetWidth
+}
+
+const labelWidth = () => {
+	return Math.max(checkedLabelRef.value.offsetWidth, uncheckedLabelRef.value.offsetWidth)
+}
+
+onMounted(() => {
+})
+
+onUnmounted(() => {
+})
+
+</script>
+
+<style lang="css">
+	svg.defs-only {
+		display: none;
+	}
+	.v-switch-label {
+  	position: absolute;
+		width: 100%;
+		height: 100%;
+		font-size: small;
+    font-weight: 600;
+    color: white;
+    z-index: 1;
+	}
+</style>
+
 <template>
 	<svg class="defs-only" xmlns="http://www.w3.org/2000/svg">
 		<symbol id="hand-thumb-up" viewBox="0 0 24 24">
@@ -21,37 +96,52 @@
 			</g>
 		</symbol>
 	</svg>
-	<SwitchGroup as="div" class="flex items-center justify-between">
 
-    <span class="flex flex-grow flex-col">
+	<!-- HIDDEN optionLabels -->
+	<div class="absolute inset-0 opacity-0 z-0 flex flex-row flex-start" v-if="optionLabels">
+		<span ref="checkedLabelRef">{{optionLabels.checked}}</span>
+		<span ref="uncheckedLabelRef">{{optionLabels.unchecked}}</span>
+  </div>
+
+	<!-- SwitchGroup -->
+	<SwitchGroup as="div" class="flex flex-row items-center justify-between">
+
+		<!-- Label -->
+    <span class="flex flex-grow flex-col" :class="[label.position === 'left' ? 'order-first' : 'order-last pl-5']">
       <SwitchLabel v-if="label" as="span" class="text-sm font-medium text-gray-900" passive>{{label.title}}</SwitchLabel>
       <SwitchDescription v-if="label" as="span" class="text-sm text-gray-500">{{label.description}}</SwitchDescription>
     </span>
 
-		<Switch ref="switchRef" v-model="enabled" 
-			:class="[enabled ? 'bg-indigo-600' : 'bg-gray-200', 'relative inline-flex h-6 flex-shrink-0 flex-grow cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2']" 
+		<Switch 
+			ref="toggleRef" 
+			v-model="enabled" 
+			:class="[disabled ? (enabled ? 'bg-indigo-300' : 'bg-gray-300') : (enabled ? 'bg-indigo-600' : 'bg-gray-200'), 'relative inline-flex flex-row h-6 flex-shrink-0 flex-grow cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2']" 
+			:style="[{minWidth: `${sliderWidth() * 2 + labelWidth() + 1}px`, width: `${sliderWidth() * 2 + labelWidth()}px`, maxWidth: `${sliderWidth() * 2 + labelWidth() + 1}px`}]"
 			:disabled="disabled">
+			
 			<span class="sr-only">Use setting</span>
-			<span aria-hidden="true" 
-			:class="'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'" 
-			:style="[enabled ? [{ 'transform': `translateX(calc(${labelWidth.value} - 1.25rem))`}] : [{ 'transform': `translateX(0)` }]]">
+
+			<span 
+				ref="sliderRef"
+				aria-hidden="true"
+				:class="['pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out']" 
+				:style="[enabled ? [{ 'transform': `translateX(${labelWidth() + sliderWidth() - 4}px)`}] : [{ 'transform': `translateX(0)` }]]"
+				>
+				
 				<template v-if="icons">
-					<span :class="[enabled ? 'opacity-0 ease-out duration-100' : 'opacity-100 ease-in duration-200', 'absolute inset-0 flex h-full w-full items-center justify-center transition-opacity']" aria-hidden="true">
-						
+					<span :class="[enabled ? 'opacity-0 ease-out duration-100' : 'opacity-100 ease-in duration-200', 'absolute inset-0 flex h-full items-center justify-center transition-opacity']" aria-hidden="true">
 						<svg class="h-3 w-3 text-gray-400">
 							<use :xlink:href="`#${icons.unchecked}`"/>
 						</svg>
-
 					</span>
-					<span :class="[enabled ? 'opacity-100 ease-in duration-200' : 'opacity-0 ease-out duration-100', 'absolute inset-0 flex h-full w-full items-center justify-center transition-opacity']" aria-hidden="true">
-						
+
+					<span :class="[enabled ? 'opacity-100 ease-in duration-200' : 'opacity-0 ease-out duration-100', 'absolute inset-0 flex h-full items-center justify-center transition-opacity']" aria-hidden="true">	
 						<svg class="h-3 w-3 text-gray-400">
-							<!-- <use xlink:href="#check" /> -->
 							<use :xlink:href="`#${icons.checked}`"/>
 						</svg>
-
 					</span>
 				</template>
+
 			</span>
 
 			<template v-if="optionLabels">
@@ -62,105 +152,6 @@
 					<slot name="unchecked">{{optionLabels.unchecked}}</slot>
 				</span>
 			</template>
-			<div style="visibility:hidden" v-if="optionLabels">
-				<span ref="checkedLabel">{{optionLabels.checked}}</span>
-				<span ref="uncheckedLabel">{{optionLabels.unchecked}}</span>
-  		</div>
 		</Switch>
 	</SwitchGroup>
-
-
 </template>
-
-<script setup lang="ts">
-import { ref, Ref, computed, onMounted, onUpdated } from 'vue'
-import { Switch, SwitchDescription, SwitchGroup, SwitchLabel } from '@headlessui/vue'
-import { isString, isObject, isBoolean, has, get, translate, px } from './utils'
-
-const props = defineProps({
-	value: {
-		type: Boolean,
-		default: false,
-	},
-	name: {
-		type: String,
-	},
-	disabled: {
-		type: Boolean,
-		default: false,
-	},
-	speed: {
-		type: Number,
-		default: 200,
-	},
-	type: {
-		required: false,
-		type: String,
-		default: 'default'
-	},
-	icons: {
-		required: false,
-		type: Object
-	},
-	label: {
-		required: false,
-		type: Object,
-		default: {
-			title: '',
-			description: '',
-			position: 'left'
-		}
-	},
-	optionLabels: {
-		required: false,
-		type: Object
-	}
-})
-
-const enabled = ref(props.value)
-const minWidth = 40
-const maxWidth = 120
-
-const switchRef = ref() as any
-const checkedRef = ref({}) as Ref<HTMLSpanElement>
-const uncheckedRef = ref({}) as Ref<HTMLSpanElement>
-const checkedLabel = ref({}) as Ref<HTMLSpanElement>
-const uncheckedLabel = ref({}) as Ref<HTMLSpanElement>
-const labelWidth = ref() as any
-
-const computedWidth = computed(() => {
-	if(props.optionLabels) {
-		return `${Math.min(maxWidth, Math.max(checkedRef.value.clientWidth, uncheckedRef.value.clientWidth))}px`
-	} else {
-		return `${minWidth - 4}`
-	}
-})
-
-labelWidth.value = computedWidth
-
-onMounted(() => {
-	switchRef.value.$el.style.minWidth = `${minWidth}px`
-	switchRef.value.$el.style.maxWidth = `${maxWidth}px`
-	if(props.optionLabels) {
-		let labelWidth = `${Math.min(maxWidth, Math.max(checkedLabel.value.offsetWidth, uncheckedLabel.value.offsetWidth))}px`
-		let sliderWidth = `${switchRef.value.$el.children[1].offsetWidth}px`
-		switchRef.value.$el.style.width = `calc(${labelWidth} + ${sliderWidth} + 1rem)`
-	}
-})
-
-</script>
-
-<style lang="css">
-	svg.defs-only {
-		display: none;
-	}
-	.v-switch-label {
-  	position: absolute;
-		width: 100%;
-		height: 100%;
-		font-size: small;
-    font-weight: 600;
-    color: white;
-    z-index: 1;
-	}
-</style>
