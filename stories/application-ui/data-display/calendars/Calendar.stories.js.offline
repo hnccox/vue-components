@@ -1,0 +1,29 @@
+import Card from '/components/application-ui/layout/panels/card.vue';
+import Switch from '/components/application-ui/data-display/calendars/Calendar.vue';
+
+// More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
+export default {
+	title: 'Data-Display/Calendars',
+	component: Calendar,
+	// More on argTypes: https://storybook.js.org/docs/vue/api/argtypes
+	argTypes: {
+	},
+};
+
+// More on component templates: https://storybook.js.org/docs/vue/writing-stories/introduction#using-args
+const Template = (args) => ({
+	// Components used in your story `template` are defined in the `components` object
+	components: { Card, Switch },
+	// The story's `args` need to be mapped into the template through the `setup()` method
+	setup() {
+		return { args };
+	},
+	// And then the `args` are bound to your component with `v-bind="args"`
+	template: '<Preview><Card><Calendar v-bind="args" /></Calendar></Preview>',
+});
+
+export const CalendarComponent = Template.bind({});
+// More on args: https://storybook.js.org/docs/vue/writing-stories/args
+CalendarComponent.args = {
+	views: ['day', 'week', 'month', 'year'],
+};

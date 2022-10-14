@@ -194,9 +194,9 @@ export const useCalendarStore = defineStore('calendar', {
 			// 	// whatever
 			// }
 		},
-		async updateEvent(event) {
+		async updateEvent(event: any) {
 			let eventId = event.id
-			let target = this.events.find((event) => event.id === eventId)
+			let target = this.events.find((event) => event.uid === eventId)
 			console.log(target)
 			target = event
 			console.log(target)
@@ -262,14 +262,14 @@ export const useCalendarStore = defineStore('calendar', {
 		// 		}
 		// 	}
 		// }
-		drawEvents(events) {
+		drawEvents(events: any) {
 
 			let eventsArray = events
 			let drawEvents = []
 			let leftOffset = 0
 			let rightOffset = 0
 
-			function getChildren(eventArray) {
+			function getChildren(eventArray: any): Array<any> {
 				let array = []
 				while (eventArray.length > 0) {
 					let event = eventArray[0]
@@ -280,14 +280,14 @@ export const useCalendarStore = defineStore('calendar', {
 						elem.style.width = `calc(100% - ${leftOffset}% - ${rightOffset}%)`
 					})
 
-					let children = eventsArray.filter((overlap) => ((overlap.end > event.start && overlap.end <= event.end) || (event.end > overlap.start && event.end <= overlap.end)) && overlap.uid !== event.uid);
+					let children = eventsArray.filter((overlap: any) => ((overlap.end > event.start && overlap.end <= event.end) || (event.end > overlap.start && event.end <= overlap.end)) && overlap.uid !== event.uid);
 					if (children.length == 0) {
-						eventsArray = eventsArray.filter(ev => ev !== event)
-						eventArray = eventArray.filter(ev => ev !== event)
+						eventsArray = eventsArray.filter((ev: any) => ev !== event)
+						eventArray = eventArray.filter((ev: any) => ev !== event)
 						array.push(event)
 					} else {
-						eventsArray = eventsArray.filter(ev => ev !== event)
-						eventArray = eventArray.filter(ev => ev !== event)
+						eventsArray = eventsArray.filter((ev: any) => ev !== event)
+						eventArray = eventArray.filter((ev: any) => ev !== event)
 						leftOffset = leftOffset + 10
 						rightOffset = rightOffset + 5
 						array.push([event, getChildren(children)])
@@ -306,12 +306,12 @@ export const useCalendarStore = defineStore('calendar', {
 					elem.style.right = `${rightOffset}%`
 					elem.style.width = `calc(100% - ${leftOffset}% - ${rightOffset}%)`
 				})
-				let children = eventsArray.filter((overlap) => ((overlap.end > event.start && overlap.end <= event.end) || (event.end > overlap.start && event.end <= overlap.end)) && overlap.uid !== event.uid);
+				let children = eventsArray.filter((overlap: any) => ((overlap.end > event.start && overlap.end <= event.end) || (event.end > overlap.start && event.end <= overlap.end)) && overlap.uid !== event.uid);
 				if (children.length == 0) {
-					eventsArray = eventsArray.filter(ev => ev !== event)
+					eventsArray = eventsArray.filter((ev: any) => ev !== event)
 					drawEvents.push(event)
 				} else {
-					eventsArray = eventsArray.filter(ev => ev !== event)
+					eventsArray = eventsArray.filter((ev: any) => ev !== event)
 					leftOffset = leftOffset + 10
 					rightOffset = rightOffset + 5
 					drawEvents.push([event, getChildren(children)])

@@ -16,6 +16,16 @@ const Template = (args) => ({
 	components: { Card, Toggle },
 	// The story's `args` need to be mapped into the template through the `setup()` method
 	setup() {
+
+		// Sets a click handler to change the label's value
+		const handleOnClick = () => {
+			console.log('HELLO!!!')
+			if (!isPrimary) {
+				setIsPrimary(true);
+				setValue('Primary');
+			}
+		};
+
 		return { args };
 	},
 	// And then the `args` are bound to your component with `v-bind="args"`
@@ -25,23 +35,24 @@ const Template = (args) => ({
 export const ToggleComponent = Template.bind({});
 // More on args: https://storybook.js.org/docs/vue/writing-stories/args
 ToggleComponent.args = {
-	value: true,
+	value: false,
 	disabled: false,
 	label: {
 		title: 'Available to hire',
 		description: 'Nulla amet tempus sit accumsan. Aliquet turpis sed sit lacinia.',
-		position: 'left'
+		position: 'right'
 	},
-	optionLabels: {
-		checked: 'Enabled',
-		unchecked: 'Disabled',
-	},
-	icons: {
-		checked: 'check',
-		unchecked: 'x-mark'
-	},
-	// icons: {
-	// 	checked: 'hand-thumb-down',
-	// 	unchecked: 'hand-thumb-up'
+	// optionLabels: {
+	// 	checked: 'Enabled',
+	// 	unchecked: 'Disabled',
+	// 	position: 'outer'
 	// },
+	// icons: {
+	// 	checked: 'check',
+	// 	unchecked: 'x-mark'
+	// },
+	icons: {
+		checked: 'hand-thumb-down',
+		unchecked: 'hand-thumb-up'
+	},
 };

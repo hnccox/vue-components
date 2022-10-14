@@ -1,4 +1,4 @@
-import BusinessHours from '/components/branches/businesshours.vue';
+import BusinessHours from '/components/pages/businesshours.vue';
 import Card from '/components/application-ui/layout/panels/card.vue';
 
 // More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export

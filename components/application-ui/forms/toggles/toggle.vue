@@ -1,7 +1,26 @@
 <script setup lang="ts">
-import { ref, Ref, computed, onMounted, onUnmounted, onUpdated, onActivated } from 'vue'
+import { ref, Ref, computed, onMounted, onUnmounted, onUpdated, onActivated, PropType } from 'vue'
 import { Switch, SwitchDescription, SwitchGroup, SwitchLabel } from '@headlessui/vue'
 import { isString, isObject, isBoolean, has, get, translate, px } from './utils'
+
+let portrait = window.matchMedia("(orientation: portrait)").matches
+
+type Label = {
+	title?: string,
+	description?: string,
+	position?: 'top' | 'right' | 'bottom' | 'left' | 'top left' | 'top right' | 'bottom left' | 'bottom right'
+}
+
+type OptionLabels = {
+	checked: string,
+	unchecked: string
+	position?: 'inner' | 'outer'
+}
+
+type Icons = {
+	checked: 'check' | 'thumbs-up'
+	unchecked: 'xmark' | 'thumbs-down'
+}
 
 const props = defineProps({
 	value: {
@@ -9,7 +28,8 @@ const props = defineProps({
 		default: false,
 	},
 	name: {
-		type: String,
+		type: [String, Number],
+		required: false,
 	},
 	disabled: {
 		type: Boolean,
@@ -17,27 +37,49 @@ const props = defineProps({
 	},
 	icons: {
 		required: false,
-		type: Object
+		type: Object as PropType<Icons>
 	},
 	label: {
 		required: false,
-		type: Object,
+		type: Object as PropType<Label>,
 		default: {
-			title: '',
-			description: '',
 			position: 'left'
 		}
 	},
 	optionLabels: {
 		required: false,
-		type: Object
+		type: Object as PropType<OptionLabels>
 	}
 })
+
+// const emit = defineEmits(['onClick'])
+// const handleClick = (event: Event) => {  
+// 	emit('onClick', event.target)
+// }
+
+if(props.label && !props.label.position) { props.label.position = 'left'}
+if(props.optionLabels && !props.optionLabels.position) { props.optionLabels.position = 'inner' }
+
+if(props.label?.position && props.label?.position.split(' ').length === 1) {
+		switch(props.label?.position) {
+			case 'top':
+				props.label.position = 'top left'
+				break;
+			case 'right':
+				props.label.position = 'top right'
+				break;
+			case 'bottom':
+				props.label.position = 'bottom left'
+				break;
+			case 'left':
+				props.label.position = 'top left'
+			default: 
+		}
+	}
 
 const enabled = ref(props.value)
 const disabled = ref(props.disabled)
 
-const toggleRef = ref({}) as Ref<any>
 const sliderRef = ref({}) as Ref<any>
 const checkedLabelRef = ref({}) as Ref<any>
 const uncheckedLabelRef = ref({}) as Ref<any>
@@ -47,13 +89,24 @@ const sliderWidth = () => {
 }
 
 const labelWidth = () => {
-	return Math.max(checkedLabelRef.value.offsetWidth, uncheckedLabelRef.value.offsetWidth)
+	return Math.max(checkedLabelRef.value.offsetWidth, uncheckedLabelRef.value.offsetWidth) || 0
+}
+
+const labelPosition = (portrait: boolean) => {
+	if(portrait) {
+		return (props.label?.position && props.label?.position.split(' ')[0] === 'top' ? 'flex-col' : 'flex-col-reverse');
+	} else {
+		return (props.label?.position && props.label?.position.split(' ')[1] === 'left' ? 'flex-row' : 'flex-row-reverse');
+	}	
 }
 
 onMounted(() => {
 })
 
 onUnmounted(() => {
+})
+
+onUpdated(() => {
 })
 
 </script>
@@ -98,60 +151,66 @@ onUnmounted(() => {
 	</svg>
 
 	<!-- HIDDEN optionLabels -->
-	<div class="absolute inset-0 opacity-0 z-0 flex flex-row flex-start" v-if="optionLabels">
+	<div class="absolute inset-0 opacity-0 z-0 flex flex-row flex-start pointer-events-none" v-if="optionLabels">
 		<span ref="checkedLabelRef">{{optionLabels.checked}}</span>
 		<span ref="uncheckedLabelRef">{{optionLabels.unchecked}}</span>
   </div>
 
 	<!-- SwitchGroup -->
-	<SwitchGroup as="div" class="flex flex-row items-center justify-between">
+	<SwitchGroup as="div" class="flex items-center justify-between" :class="labelPosition(portrait)">
 
 		<!-- Label -->
-    <span class="flex flex-grow flex-col" :class="[label.position === 'left' ? 'order-first' : 'order-last pl-5']">
+    <span class="flex flex-grow flex-col m-2 px-2">
       <SwitchLabel v-if="label" as="span" class="text-sm font-medium text-gray-900" passive>{{label.title}}</SwitchLabel>
       <SwitchDescription v-if="label" as="span" class="text-sm text-gray-500">{{label.description}}</SwitchDescription>
     </span>
 
-		<Switch 
-			ref="toggleRef" 
-			v-model="enabled" 
-			:class="[disabled ? (enabled ? 'bg-indigo-300' : 'bg-gray-300') : (enabled ? 'bg-indigo-600' : 'bg-gray-200'), 'relative inline-flex flex-row h-6 flex-shrink-0 flex-grow cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2']" 
-			:style="[{minWidth: `${sliderWidth() * 2 + labelWidth() + 1}px`, width: `${sliderWidth() * 2 + labelWidth()}px`, maxWidth: `${sliderWidth() * 2 + labelWidth() + 1}px`}]"
-			:disabled="disabled">
-			
-			<span class="sr-only">Use setting</span>
-
-			<span 
-				ref="sliderRef"
-				aria-hidden="true"
-				:class="['pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out']" 
-				:style="[enabled ? [{ 'transform': `translateX(${labelWidth() + sliderWidth() - 4}px)`}] : [{ 'transform': `translateX(0)` }]]"
-				>
+		<div class="flex flex-row items-center m-3 px-2">
+			<span v-if="optionLabels && optionLabels.position === 'outer'" class="relative text-sm mx-1" :class="[enabled ? 'text-slate-500' : 'text-current']">{{optionLabels.unchecked}}</span>
+			<Switch 
+				ref="toggleRef" 
+				v-model="enabled"
+				:class="[disabled ? (enabled ? 'bg-indigo-300' : 'bg-gray-300') : (enabled ? 'bg-indigo-600' : 'bg-gray-200'), 'relative inline-flex flex-row h-6 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2']" 
+				:style="[{minWidth: `${sliderWidth() * 2 + labelWidth()}px`, width: `${sliderWidth() * 2 + labelWidth()}px`, maxWidth: `${sliderWidth() * 2 + labelWidth()}px`}]"
+				:disabled="disabled"
+				@click="$emit('click', name, enabled)"
+			>
 				
-				<template v-if="icons">
-					<span :class="[enabled ? 'opacity-0 ease-out duration-100' : 'opacity-100 ease-in duration-200', 'absolute inset-0 flex h-full items-center justify-center transition-opacity']" aria-hidden="true">
-						<svg class="h-3 w-3 text-gray-400">
-							<use :xlink:href="`#${icons.unchecked}`"/>
-						</svg>
-					</span>
+				<span class="sr-only">Use setting</span>
 
-					<span :class="[enabled ? 'opacity-100 ease-in duration-200' : 'opacity-0 ease-out duration-100', 'absolute inset-0 flex h-full items-center justify-center transition-opacity']" aria-hidden="true">	
-						<svg class="h-3 w-3 text-gray-400">
-							<use :xlink:href="`#${icons.checked}`"/>
-						</svg>
+				<span 
+					ref="sliderRef"
+					aria-hidden="true"
+					:class="['pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out']" 
+					:style="[enabled ? [{ 'transform': `translateX(${sliderWidth() + labelWidth() - 4}px)`}] : [{ 'transform': `translateX(0)` }]]"
+					>
+					
+					<template v-if="icons">
+						<span :class="[enabled ? 'opacity-0 ease-out duration-100' : 'opacity-100 ease-in duration-200', 'absolute inset-0 flex h-full items-center justify-center transition-opacity']" aria-hidden="true">
+							<svg class="h-3 w-3 text-gray-400">
+								<use :xlink:href="`#${icons.unchecked}`"/>
+							</svg>
+						</span>
+
+						<span :class="[enabled ? 'opacity-100 ease-in duration-200' : 'opacity-0 ease-out duration-100', 'absolute inset-0 flex h-full items-center justify-center transition-opacity']" aria-hidden="true">	
+							<svg class="h-3 w-3 text-gray-400">
+								<use :xlink:href="`#${icons.checked}`"/>
+							</svg>
+						</span>
+					</template>
+				</span>
+
+				<template v-if="optionLabels && optionLabels.position === 'inner'">
+					<span ref="uncheckedRef" class="v-switch-label text-end pr-2" :class="[enabled ? 'invisible': 'visible']">
+						<slot name="unchecked">{{optionLabels.unchecked}}</slot>
+					</span>
+					<span ref="checkedRef" class="v-switch-label text-start pl-2" :class="[enabled ? 'visible': 'invisible']">
+						<slot name="checked">{{optionLabels.checked}}</slot>
 					</span>
 				</template>
-
-			</span>
-
-			<template v-if="optionLabels">
-				<span ref="checkedRef" class="v-switch-label text-start pl-2" :class="[enabled ? 'visible': 'invisible']">
-					<slot name="checked">{{optionLabels.checked}}</slot>
-				</span>
-				<span ref="uncheckedRef" class="v-switch-label text-end pr-2" :class="[enabled ? 'invisible': 'visible']">
-					<slot name="unchecked">{{optionLabels.unchecked}}</slot>
-				</span>
-			</template>
-		</Switch>
+			</Switch>
+			<span v-if="optionLabels && optionLabels.position === 'outer'"
+				class="relative text-sm mx-1" :class="[enabled ? 'text-current' : 'text-slate-500']">{{optionLabels.checked}}</span>
+		</div>
 	</SwitchGroup>
 </template>

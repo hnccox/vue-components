@@ -13,7 +13,7 @@
   ```
 -->
 <template>
-  <div>
+  <div class="flex flex-row self-center">
 		<div class="flex justify-between">
       <label :for="id" class="block text-sm font-medium text-gray-700">{{ label }}</label>
       <span class="text-sm text-gray-500" :id="`${id}-optional`">{{ optional }}</span>
@@ -21,11 +21,11 @@
     
     <div class="relative mt-1 rounded-md shadow-sm">
 			<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-				<component :is="inputType" class="h-5 w-5 text-gray-400" aria-hidden="true"></component>
-				<ClockIcon v-if="type === 'datetime-local'" class="h-5 w-5 text-gray-400" aria-hidden="true" />
+				<component v-if="icon" :is="inputType" class="h-5 w-5 text-gray-400" aria-hidden="true"></component>
+				<!-- <ClockIcon v-if="type === 'datetime-local'" class="h-5 w-5 text-gray-400" aria-hidden="true" />	 -->
       </div>
-      <input :type="type" :name="name" :id="id" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" :class="(icon) ? ((type === 'datetime-local') ? 'pl-14' : 'pl-10') : 'pl-0'" :placeholder="placeholder" :disabled="disabled" />
-			<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+      <input v-model="value" :type="type" :name="name" :id="id" class="block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" :class="[{'pl-10': icon}, {'pr-10': validationIcon}]" :placeholder="placeholder" :disabled="disabled" />
+			<div v-if="validationIcon" class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
         <ExclamationCircleIcon v-if="success === false" class="h-5 w-5 text-red-500" aria-hidden="true" />
 				<CheckIcon  v-if="success === true" class="h-5 w-5 text-green-500" aria-hidden="true" />
       </div>
@@ -54,12 +54,11 @@ import {
 	ExclamationCircleIcon,
 	CheckIcon
 } from '@heroicons/vue/24/solid'
-import { match } from 'assert';
 
 export interface Props {
 	id?: string,
 	type?: string,
-	name?: string,
+	name?: string | number,
 	value: string | number | Array<any> | Object,
 	min?: string | number | Array<any> | Object,	
 	max?: string | number | Array<any> | Object,
@@ -67,9 +66,12 @@ export interface Props {
 	disabled?: boolean,
 	label?: string,
 	description?: string,
+	required?: boolean,
 	optional?: string,
-	icon?: Object,
+	icon?: boolean,
 	iconPosition?: string,
+	validation?: boolean,
+	validationIcon?: boolean,
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -79,13 +81,16 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const id = ref(props.id)
+const name = ref(props.name).toString()
 const success = ref(true)
 const error = ref(false)
 
 const inputType = ref(null) as any
+const width = ref('w-full') as any
 switch(props.type) {
 	case 'color':
 		inputType.value = SwatchIcon
+		width.value = 'w-5'
 		break;
 		case 'date':
 		// inputType.value = CalendarDaysIcon
@@ -123,6 +128,7 @@ switch(props.type) {
 		break;
 	case 'time':
 		inputType.value = ClockIcon
+		width.value = 'w-5'
 		break;
 	case 'url':
 		inputType.value = LinkIcon
