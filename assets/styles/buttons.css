@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+	button {
+			@apply inline-flex items-center rounded-md border border-transparent font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2;
+			/* display: 'flex';
+			justify-content: 'center';
+			align-items: 'center';
+			border-radius: 6;
+			padding-top: 15;
+			padding-bottom: 15;
+			padding-left: 45;
+			padding-right: 45;
+			overflow: 'hidden'; */
+	}
+	.buttonText {
+		/* font-family: 'Geomanist-Bold'; */
+		/* font-style: 'normal'; */
+		/* font-weight: 'normal'; */
+		/* font-size: 18; */
+		/* text-align: 'center'; */
+	}
+	.default {
+			@apply bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500 disabled:bg-indigo-300 disabled:ring-indigo-300
+			/* background-color: 'hsl(360, 100%, 100%)'; */
+	}
+	
+	.primary {
+		@apply border-blue-600 bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 disabled:border-blue-300 disabled:bg-blue-300 disabled:ring-blue-300;
+			/* border-color: 'hsl(211, 100%, 50%)'; */
+			/* background-color: hsl(211, 100%, 50%); */
+		}
+		.primaryText {
+			/* color: hsl(0, 0%, 100%); */
+		}
+	.secondary {
+		@apply border-gray-500 bg-gray-500 text-white hover:bg-gray-700 focus:ring-gray-400 disabled:border-gray-300 disabled:bg-gray-300 disabled:ring-gray-300;
+			/* border-color: hsl(208, 7%, 46%); */
+			/* background-color: rgb(109, 118, 126); */
+		}
+		.secondaryText {
+			/* color: hsl(0, 0%, 100%); */
+		}
+		.success {
+			@apply border-emerald-600 bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-500 disabled:border-emerald-300 disabled:bg-emerald-300 disabled:ring-emerald-300;
+			/* border-color: hsl(134, 61%, 41%); */
+			/* background-color: rgb(41, 168, 71); */
+		}
+		.successText {
+			/* color: 'hsl(0, 0%, 100%)'; */
+		}
+		.danger {
+			@apply border-red-600 bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 disabled:border-red-300 disabled:bg-red-300 disabled:ring-red-300;
+			/* border-color: hsl(354, 70%, 54%); */
+			/* background-color: rgb(220, 56, 72); */
+		}
+		.dangerText {
+			/* color: 'hsl(0, 0%, 100%)'; */
+		}
+		.warning {
+			@apply border-orange-300 bg-orange-300 text-gray-700 hover:bg-orange-500 focus:ring-orange-400 disabled:border-orange-200 disabled:bg-orange-200 disabled:ring-orange-200 disabled:text-gray-400;
+			/* border-color: hsl(45, 100%, 51%); */
+			/* background-color: rgb(255, 193, 5); */
+		}
+		.warningText {
+			/* color: hsl(210, 11%, 15%); */
+		}
+		.info {
+			@apply border-cyan-500 bg-cyan-500 text-white hover:bg-cyan-700 focus:ring-cyan-400 disabled:bg-cyan-300;
+			/* border-color: rgb(23, 164, 186); */
+			/* background-color: hsl(188, 78%, 41%); */
+		}
+		.infoText {
+			/* color: hsl(0, 0%, 100%); */
+		}
+		.light {
+			@apply border-slate-50 bg-slate-50 text-gray-700 hover:bg-slate-200 focus:ring-slate-300 disabled:border-slate-400 disabled:bg-slate-400 disabled:ring-slate-400 disabled:text-gray-400;
+			/* border-color: rgb(249, 250, 251); */
+			/* background-color: hsl(210, 17%, 98%); */
+		}
+		.lightText {
+			/* color: hsl(210, 11%, 15%); */
+		}
+		.dark {
+			@apply border-gray-700 bg-gray-700 text-white hover:bg-gray-500 focus:ring-gray-600 disabled:border-gray-400 disabled:bg-gray-400 disabled:ring-gray-400;
+			/* border-color: rgb(53, 59, 65); */
+			/* background-color: hsl(210, 10%, 23%); */
+		}
+		.darkText {
+			/* color: hsl(0, 0%, 100%); */
+		}
+		.link {
+			@apply bg-transparent font-normal text-blue-600 disabled:text-blue-300;
+			/* background-color: 'transparent'; */
+		}
+		.linkText {
+			/* font-weight: '400'; */
+			/* color: rgb(0, 123, 255); */
+		}
+	}

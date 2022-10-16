@@ -13,8 +13,8 @@ type Label = {
 
 type OptionLabels = {
 	checked: string,
-	unchecked: string
-	position?: 'inner' | 'outer'
+	unchecked: string,
+	position?: 'inner' | 'outer' | 'outer left' | 'outer right'
 }
 
 type Icons = {
@@ -52,30 +52,43 @@ const props = defineProps({
 	}
 })
 
-// const emit = defineEmits(['onClick'])
-// const handleClick = (event: Event) => {  
-// 	emit('onClick', event.target)
-// }
-
 if(props.label && !props.label.position) { props.label.position = 'left'}
 if(props.optionLabels && !props.optionLabels.position) { props.optionLabels.position = 'inner' }
 
 if(props.label?.position && props.label?.position.split(' ').length === 1) {
-		switch(props.label?.position) {
-			case 'top':
-				props.label.position = 'top left'
-				break;
-			case 'right':
-				props.label.position = 'top right'
-				break;
-			case 'bottom':
-				props.label.position = 'bottom left'
-				break;
-			case 'left':
-				props.label.position = 'top left'
-			default: 
-		}
+	switch(props.label?.position) {
+		case 'top':
+			props.label.position = 'top left'
+			break;
+		case 'right':
+			props.label.position = 'top right'
+			break;
+		case 'bottom':
+			props.label.position = 'bottom left'
+			break;
+		case 'left':
+			props.label.position = 'top left'
+		default: 
+			props.label.position = 'top left'
 	}
+}
+
+// if(props.optionLabels?.position && props.optionLabels?.position.split(' ').length === 1) {
+// 	switch(props.optionLabels?.position) {
+// 		case '':
+// 			props.optionLabels.position = 'outer left'
+// 			break;
+// 		case 'right':
+// 			props.optionLabels.position = 'outer right'
+// 			break;
+// 		case 'bottom':
+// 			props.optionLabels.position = 'bottom left'
+// 			break;
+// 		case 'left':
+// 			props.optionLabels.position = 'top left'
+// 		default: 
+// 	}
+// }
 
 const enabled = ref(props.value)
 const disabled = ref(props.disabled)
@@ -89,7 +102,7 @@ const sliderWidth = () => {
 }
 
 const labelWidth = () => {
-	return Math.max(checkedLabelRef.value.offsetWidth, uncheckedLabelRef.value.offsetWidth) || 0
+	return (props.optionLabels?.position === 'inner') ? Math.max(checkedLabelRef.value.offsetWidth, uncheckedLabelRef.value.offsetWidth) : 0
 }
 
 const labelPosition = (portrait: boolean) => {
@@ -166,13 +179,26 @@ onUpdated(() => {
     </span>
 
 		<div class="flex flex-row items-center m-3 px-2">
-			<span v-if="optionLabels && optionLabels.position === 'outer'" class="relative text-sm mx-1" :class="[enabled ? 'text-slate-500' : 'text-current']">{{optionLabels.unchecked}}</span>
+
+			<!-- optionLabels -->
+			<div class="flex items-center">
+				<span v-if="optionLabels && (optionLabels.position === 'outer' || optionLabels.position === 'outer left')" 
+					class="relative text-sm mx-1" :class="[(!enabled && !disabled) ? 'text-current' : 'text-slate-500', (optionLabels.position === 'outer' || (optionLabels.position === 'outer left' && !enabled)) ? 'visible' : 'invisible']">
+					{{optionLabels.unchecked}}
+				</span>
+				<span v-if="optionLabels && optionLabels.position === 'outer left'"
+					class="absolute text-sm mx-1" :class="[(enabled && !disabled) ? 'text-current' : 'text-slate-500', (optionLabels.position === 'outer left' && enabled) ? 'visible' : 'invisible']">
+					{{optionLabels.checked}}
+				</span>
+			</div>
+
 			<Switch 
 				ref="toggleRef" 
 				v-model="enabled"
-				:class="[disabled ? (enabled ? 'bg-indigo-300' : 'bg-gray-300') : (enabled ? 'bg-indigo-600' : 'bg-gray-200'), 'relative inline-flex flex-row h-6 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2']" 
+				:class="[disabled ? (enabled ? 'bg-indigo-300' : 'bg-gray-300') : (enabled ? 'bg-indigo-600' : 'bg-gray-200'), 'relative inline-flex flex-row h-6 mx-2 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2']" 
 				:style="[{minWidth: `${sliderWidth() * 2 + labelWidth()}px`, width: `${sliderWidth() * 2 + labelWidth()}px`, maxWidth: `${sliderWidth() * 2 + labelWidth()}px`}]"
 				:disabled="disabled"
+				v-bind="$attrs"
 				@click="$emit('click', name, enabled)"
 			>
 				
@@ -209,8 +235,18 @@ onUpdated(() => {
 					</span>
 				</template>
 			</Switch>
-			<span v-if="optionLabels && optionLabels.position === 'outer'"
-				class="relative text-sm mx-1" :class="[enabled ? 'text-current' : 'text-slate-500']">{{optionLabels.checked}}</span>
+
+			<!-- optionLabels -->
+			<div class="flex items-center">
+				<span v-if="optionLabels && (optionLabels.position === 'outer' || optionLabels.position === 'outer right')"
+					class="relative text-sm mx-1" :class="[(enabled && !disabled) ? 'text-current' : 'text-slate-500', (optionLabels.position === 'outer' || (optionLabels.position === 'outer right' && enabled)) ? 'visible' : 'invisible']">
+					{{optionLabels.checked}}
+				</span>
+				<span v-if="optionLabels && optionLabels.position === 'outer right'" 
+					class="absolute text-sm mx-1" :class="[(!enabled && !disabled) ? 'text-current' : 'text-slate-500', (optionLabels.position === 'outer right' && enabled) ? 'invisible' : 'visible']">
+					{{optionLabels.unchecked}}
+				</span>
+			</div>
 		</div>
 	</SwitchGroup>
 </template>

@@ -34,18 +34,19 @@ const onClick = (event: Event, value: any) => {
 				:value="true"	
 				:disabled="false"
 				:name="1"
+				:data-weekday="1"
 				:label="{ title: 'Monday' }"
 				:optionLabels="{ checked: 'Open', unchecked: 'Closed' }"
 				@click="onClick"
 			/>
 		</div>
 		<div class="flex flex-row gap-x-2 items-center">
-			<Input type="time" value="" icon validation-icon required />
+			<Input :data-weekday="1" type="time" value="" icon validation-icon required disabled />
 			<span class="self-center"> - </span>
-			<Input type="time" value="" icon validation-icon required />
+			<Input :data-weekday="1" type="time" value="" icon validation-icon required disabled />
 		</div>
 		<div class="flex items-center">
-			<Button title="Add +"></Button>
+			<Button :data-weekday="1" title="Add +" disabled></Button>
 		</div>
 	</div>
 	<div class="grid grid-cols-2">

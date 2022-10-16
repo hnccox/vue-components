@@ -6,7 +6,7 @@
 	</button>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const props = defineProps({
 	size: {
 		type: String
@@ -16,7 +16,7 @@ const props = defineProps({
 	}
 })
 
-let buttonStyle;
+let buttonStyle: string;
 switch (props.size) {
 	case "xs":
 		buttonStyle = 'rounded px-2.5 py-1.5 text-xs'
