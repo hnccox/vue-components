@@ -35,6 +35,10 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
+	size: {
+		type: String,
+		default: 'auto'
+	},
 	icons: {
 		required: false,
 		type: Object as PropType<Icons>
@@ -52,6 +56,7 @@ const props = defineProps({
 	}
 })
 
+// if(!props.width) { props.width = 'auto' }
 if(props.label && !props.label.position) { props.label.position = 'left'}
 if(props.optionLabels && !props.optionLabels.position) { props.optionLabels.position = 'inner' }
 
@@ -102,7 +107,26 @@ const sliderWidth = () => {
 }
 
 const labelWidth = () => {
-	return (props.optionLabels?.position === 'inner') ? Math.max(checkedLabelRef.value.offsetWidth, uncheckedLabelRef.value.offsetWidth) : 0
+	let size;
+	switch(props.size) {
+		case 'xs':
+			size = 0;
+			break;
+		case 'sm':
+			size = 12;
+			break;
+		case 'md':
+			size = 36;
+			break;
+		case 'lg':
+			size = 60;
+			break;
+		case 'xl':
+			size = 100;
+			break;
+		default: size = 0;
+	}
+	return (props.optionLabels?.position === 'inner' || props.size === 'auto' ) ? Math.max(checkedLabelRef.value.offsetWidth, uncheckedLabelRef.value.offsetWidth) : size;
 }
 
 const labelPosition = (portrait: boolean) => {
@@ -185,13 +209,13 @@ onUpdated(() => {
 				<span v-if="optionLabels && (optionLabels.position === 'outer' || optionLabels.position === 'outer left')" 
 					class="relative text-sm mx-1" 
 					:class="[
-						enabled ? 'text-current' : (!disabled ? 'text-slate-500' : 'text-gray-300'), 
+						disabled ? 'text-gray-300' : (enabled ? 'text-slate-500' : 'text-current'), 
 						(optionLabels.position === 'outer' || (optionLabels.position === 'outer left' && !enabled)) ? 'visible' : 'invisible']"
 					>{{optionLabels.unchecked}}</span>
 				<span v-if="optionLabels && optionLabels.position === 'outer left'"
 					class="absolute text-sm mx-1" 
 					:class="[
-						enabled ? (!disabled ? 'text-current' : 'text-gray-300') : 'text-slate-500', 
+						disabled ? 'text-gray-300' : (enabled ? 'text-current' : 'text-slate-500'), 
 						(optionLabels.position === 'outer left' && enabled) ? 'visible' : 'invisible']"
 					>{{optionLabels.checked}}</span>
 			</div>
@@ -199,7 +223,7 @@ onUpdated(() => {
 			<Switch 
 				ref="toggleRef" 
 				v-model="enabled"
-				:class="[disabled ? (enabled ? 'bg-indigo-300' : 'bg-gray-300') : (enabled ? 'bg-indigo-600' : 'bg-gray-200'), 'relative inline-flex flex-row h-6 mx-2 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2']" 
+				:class="[disabled ? (enabled ? 'bg-indigo-300' : 'bg-gray-200') : (enabled ? 'bg-indigo-600' : 'bg-gray-300'), 'relative inline-flex flex-row h-6 mx-2 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2']" 
 				:style="[{minWidth: `${sliderWidth() * 2 + labelWidth()}px`, width: `${sliderWidth() * 2 + labelWidth()}px`, maxWidth: `${sliderWidth() * 2 + labelWidth()}px`}]"
 				:disabled="disabled"
 				v-bind="$attrs"
@@ -245,13 +269,13 @@ onUpdated(() => {
 				<span v-if="optionLabels && (optionLabels.position === 'outer' || optionLabels.position === 'outer right')"
 					class="relative text-sm mx-1" 
 					:class="[
-						enabled ? (!disabled ? 'text-current' : 'text-gray-300') : 'text-slate-500', 
+						disabled ? 'text-gray-300' : (enabled ? 'text-current' : 'text-slate-500'), 
 						(optionLabels.position === 'outer' || (optionLabels.position === 'outer right' && enabled)) ? 'visible' : 'invisible']"
 					>{{optionLabels.checked}}</span>
 				<span v-if="optionLabels && optionLabels.position === 'outer right'" 
 					class="absolute text-sm mx-1" 
 					:class="[
-						enabled ? 'text-current' : (!disabled ? 'text-slate-500' : 'text-gray-300'), 
+						disabled ? 'text-gray-300' : (enabled ? 'text-slate-500' : 'text-current'), 
 						(optionLabels.position === 'outer right' && enabled) ? 'invisible' : 'visible']"
 					>{{optionLabels.unchecked}}</span>
 			</div>

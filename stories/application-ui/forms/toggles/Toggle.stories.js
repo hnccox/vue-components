@@ -51,6 +51,7 @@ export const Default = (args, { argTypes }) => ({
 Default.args = {
 	value: false,
 	disabled: false,
+	size: 'auto',
 	label: {
 		title: 'Available to hire',
 		description: 'Nulla amet tempus sit accumsan. Aliquet turpis sed sit lacinia.',
