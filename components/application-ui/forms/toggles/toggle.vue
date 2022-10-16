@@ -183,11 +183,11 @@ onUpdated(() => {
 			<!-- optionLabels -->
 			<div class="flex items-center">
 				<span v-if="optionLabels && (optionLabels.position === 'outer' || optionLabels.position === 'outer left')" 
-					class="relative text-sm mx-1" :class="[(!enabled && !disabled) ? 'text-slate-500' : 'text-gray-300', (optionLabels.position === 'outer' || (optionLabels.position === 'outer left' && !enabled)) ? 'visible' : 'invisible']">
+					class="relative text-sm mx-1" :class="[enabled ? 'text-current' : (!disabled ? 'text-slate-500' : 'text-gray-300'), (optionLabels.position === 'outer' || (optionLabels.position === 'outer left' && !enabled)) ? 'visible' : 'invisible']">
 					{{optionLabels.unchecked}}
 				</span>
 				<span v-if="optionLabels && optionLabels.position === 'outer left'"
-					class="absolute text-sm mx-1" :class="[(enabled && !disabled) ? 'text-current' : 'text-slate-500', (optionLabels.position === 'outer left' && enabled) ? 'visible' : 'invisible']">
+					class="absolute text-sm mx-1" :class="[enabled ? (!disabled ? 'text-current' : 'text-gray-300')  : 'text-slate-500', (optionLabels.position === 'outer left' && enabled) ? 'visible' : 'invisible']">
 					{{optionLabels.checked}}
 				</span>
 			</div>
