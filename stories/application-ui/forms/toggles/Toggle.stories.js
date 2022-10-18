@@ -44,7 +44,7 @@ export const Default = (args, { argTypes }) => ({
   },
   props: Object.keys(argTypes),
   components: { Card, Toggle },
-	template: '<Preview><Card><Toggle v-bind="args" /></Card></Preview>',
+	template: '<div class="absolute"><Card><Toggle v-bind="args" class="default" /></Card></div>',
 });
 
 // More on args: https://storybook.js.org/docs/vue/writing-stories/args
@@ -60,14 +60,14 @@ Default.args = {
 	optionLabels: {
 		checked: 'Enabled',
 		unchecked: 'Disabled',
-		position: 'outer'
+		position: 'inner'
+	},
+	icons: {
+		checked: 'check',
+		unchecked: 'x-mark'
 	},
 	// icons: {
-	// 	checked: 'check',
-	// 	unchecked: 'x-mark'
+	// 	checked: 'hand-thumb-down',
+	// 	unchecked: 'hand-thumb-up'
 	// },
-	icons: {
-		checked: 'hand-thumb-down',
-		unchecked: 'hand-thumb-up'
-	},
 };

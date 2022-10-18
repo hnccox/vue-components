@@ -1,0 +1,42 @@
+@tailwind components;
+@layer components {
+	button {
+		@apply inline-flex items-center rounded-md border border-transparent font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2;
+	}
+	.default[aria-checked] {
+		@apply border-transparent focus:ring-indigo-500 disabled:bg-indigo-300 disabled:ring-indigo-300;
+	}
+	.default[aria-checked="false"] {
+	@apply bg-gray-300 text-white hover:bg-indigo-300 disabled:bg-gray-200;
+	}
+	.default[aria-checked="true"] {
+	@apply bg-indigo-600 text-white hover:bg-indigo-700 disabled:bg-indigo-300;
+	}
+	.primary[aria-checked] {
+		@apply border-transparent focus:ring-blue-500 disabled:bg-blue-300 disabled:ring-blue-300;
+	}
+	.primary[aria-checked="false"] {
+	@apply bg-gray-300 text-white hover:bg-blue-300 disabled:bg-gray-200;
+	}
+	.primary[aria-checked="true"] {
+	@apply bg-blue-600 text-white hover:bg-blue-700 disabled:bg-blue-300;
+	}
+	.secondary[aria-checked] {
+		@apply border-transparent focus:ring-gray-500 disabled:bg-gray-300 disabled:ring-gray-300;
+	}
+	.secondary[aria-checked="false"] {
+		@apply bg-gray-300 text-white hover:bg-gray-300 disabled:bg-gray-200;
+	}
+	.secondary[aria-checked="true"] {
+		@apply bg-gray-500 text-white hover:bg-gray-700 disabled:bg-gray-300;
+	}
+	.success[aria-checked] {
+		@apply border-transparent focus:ring-emerald-500 disabled:bg-emerald-300 disabled:ring-emerald-300;
+	}
+	.success[aria-checked="false"] {
+		@apply bg-emerald-300 text-white hover:bg-emerald-300 disabled:bg-emerald-200;
+	}
+	.success[aria-checked="true"] {
+		@apply bg-emerald-500 text-white hover:bg-emerald-700 disabled:bg-emerald-300;
+	}
+}

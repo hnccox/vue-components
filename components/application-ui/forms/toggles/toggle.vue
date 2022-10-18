@@ -36,30 +36,28 @@ const props = defineProps({
 		default: false,
 	},
 	size: {
-		type: String,
+		type: [String, Number],
 		default: 'auto'
-	},
-	icons: {
-		required: false,
-		type: Object as PropType<Icons>
 	},
 	label: {
 		required: false,
 		type: Object as PropType<Label>,
 		default: {
-			position: 'left'
+			position: 'right'
 		}
 	},
 	optionLabels: {
 		required: false,
 		type: Object as PropType<OptionLabels>
+	},
+	icons: {
+		required: false,
+		type: Object as PropType<Icons>
 	}
 })
 
-// if(!props.width) { props.width = 'auto' }
 if(props.label && !props.label.position) { props.label.position = 'left'}
 if(props.optionLabels && !props.optionLabels.position) { props.optionLabels.position = 'inner' }
-
 if(props.label?.position && props.label?.position.split(' ').length === 1) {
 	switch(props.label?.position) {
 		case 'top':
@@ -78,26 +76,8 @@ if(props.label?.position && props.label?.position.split(' ').length === 1) {
 	}
 }
 
-// if(props.optionLabels?.position && props.optionLabels?.position.split(' ').length === 1) {
-// 	switch(props.optionLabels?.position) {
-// 		case '':
-// 			props.optionLabels.position = 'outer left'
-// 			break;
-// 		case 'right':
-// 			props.optionLabels.position = 'outer right'
-// 			break;
-// 		case 'bottom':
-// 			props.optionLabels.position = 'bottom left'
-// 			break;
-// 		case 'left':
-// 			props.optionLabels.position = 'top left'
-// 		default: 
-// 	}
-// }
-
 const enabled = ref(props.value)
 const disabled = ref(props.disabled)
-
 const sliderRef = ref({}) as Ref<any>
 const checkedLabelRef = ref({}) as Ref<any>
 const uncheckedLabelRef = ref({}) as Ref<any>
@@ -107,7 +87,8 @@ const sliderWidth = () => {
 }
 
 const labelWidth = () => {
-	let size;
+	// Return always the width of the optionLabels if size < optionLabels.width
+	let size: number;
 	switch(props.size) {
 		case 'xs':
 			size = 0;
@@ -124,9 +105,9 @@ const labelWidth = () => {
 		case 'xl':
 			size = 100;
 			break;
-		default: size = 0;
+		default: Number.isInteger(props.size) ? size = props.size as number : size = 0;
 	}
-	return (props.optionLabels?.position === 'inner' || props.size === 'auto' ) ? Math.max(checkedLabelRef.value.offsetWidth, uncheckedLabelRef.value.offsetWidth) : size;
+	return (props.optionLabels?.position === 'inner' || (!props.size || props.size === 'auto') ) ? Math.max(Math.max(checkedLabelRef.value.offsetWidth, uncheckedLabelRef.value.offsetWidth), size) : size;
 }
 
 const labelPosition = (portrait: boolean) => {
@@ -151,15 +132,6 @@ onUpdated(() => {
 <style lang="css">
 	svg.defs-only {
 		display: none;
-	}
-	.v-switch-label {
-  	position: absolute;
-		width: 100%;
-		height: 100%;
-		font-size: small;
-    font-weight: 600;
-    color: white;
-    z-index: 1;
 	}
 </style>
 
@@ -223,7 +195,7 @@ onUpdated(() => {
 			<Switch 
 				ref="toggleRef" 
 				v-model="enabled"
-				:class="[disabled ? (enabled ? 'bg-indigo-300' : 'bg-gray-200') : (enabled ? 'bg-indigo-600' : 'bg-gray-300'), 'relative inline-flex flex-row h-6 mx-2 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2']" 
+				:class="['relative inline-flex flex-row h-6 mx-2 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2']" 
 				:style="[{minWidth: `${sliderWidth() * 2 + labelWidth()}px`, width: `${sliderWidth() * 2 + labelWidth()}px`, maxWidth: `${sliderWidth() * 2 + labelWidth()}px`}]"
 				:disabled="disabled"
 				v-bind="$attrs"
@@ -255,10 +227,10 @@ onUpdated(() => {
 				</span>
 
 				<template v-if="optionLabels && optionLabels.position === 'inner'">
-					<span ref="uncheckedRef" class="v-switch-label text-end pr-2" :class="[enabled ? 'invisible': 'visible']">
+					<span ref="uncheckedRef" class="absolute w-full h-full text-white text-sm font-semibold text-end pr-2" :class="[enabled ? 'invisible': 'visible']">
 						<slot name="unchecked">{{optionLabels.unchecked}}</slot>
 					</span>
-					<span ref="checkedRef" class="v-switch-label text-start pl-2" :class="[enabled ? 'visible': 'invisible']">
+					<span ref="checkedRef" class="absolute w-full h-full text-white text-sm font-semibold text-start pl-2" :class="[enabled ? 'visible': 'invisible']">
 						<slot name="checked">{{optionLabels.checked}}</slot>
 					</span>
 				</template>

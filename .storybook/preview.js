@@ -24,6 +24,7 @@ app.component('font-awesome-icon', FontAwesomeIcon);
 
 import '../assets/styles/globals.css';
 import '../assets/styles/buttons.css';
+import '../assets/styles/toggles.css';
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
